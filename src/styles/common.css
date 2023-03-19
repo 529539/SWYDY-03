@@ -1,0 +1,19 @@
+* {
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+@media (min-width: 390px) {
+	/* .wrapper {
+		width: 390px;
+		margin: 0 auto;
+		overflow: hidden;
+		position: relative;
+	} */
+}
+
+@font-face {
+	font-family: "Pretendard";
+	src: url("./PretendardVariable.ttf") format("woff2");
+}
