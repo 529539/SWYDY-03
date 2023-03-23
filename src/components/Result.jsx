@@ -5,29 +5,8 @@ import styled from "styled-components";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { IoIosCopy } from "react-icons/io";
 
-const teststring = `# 🎉 2022 대동제 안내 사이트
-
-### 프로젝트 개요 🚀
-- 부스 위치 조회 기능
-- 부스 이름, 메뉴 검색 기능
-- TF팀 공지 게시판
-- 관심 부스 좋아요 기능
-- 댓글을 통한 커뮤니티 기능
-- 교내 쓰레기통 위치 안내 기능
-- 대동제 행사 안내
-
-### 참여 팀원 👥
-| 이름 | 맡은 기능 |
-|------|----------|
-| 이서진 | 메인페이지, 페이지1 |
-| 김서진 | 페이지2, 마이페이지 |
-
-### 기술 스택 💻
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white) ![styled-components](https://img.shields.io/badge/styled--components-DB7093?style=flat&logo=styled-components&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-1ABC9C?style=flat&logo=Prettier&logoColor=white)
-`;
-
 const Result = (props) => {
-	const { result } = props;
+	const { result, result2 } = props;
 	const ref = useRef(null);
 	const scrollToBottom = () => {
 		ref.current.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +19,7 @@ const Result = (props) => {
 		[codestring]
 	);
 	useEffect(() => {
-		setCodestring(result);
+		setCodestring(result + result2);
 	}, []);
 	useEffect(() => {
 		scrollToBottom();
@@ -49,6 +28,11 @@ const Result = (props) => {
 		<>
 			<Border />
 			<Title>생성된 리드미</Title>
+			<TitleDes>
+				오른쪽 코드 박스에서 원하는대로 수정하고, 왼쪽 마크다운 프리뷰에서
+				결과물을 바로 확인하세요. 코드 박스의 우측 복사 버튼 클릭으로 손쉽게
+				마크다운 코드를 클립보드에 복사할 수 있어요!
+			</TitleDes>
 			<BoxWrapper>
 				{codestring && (
 					<>
@@ -98,7 +82,16 @@ const Title = styled.div`
 	font-family: "Pretendard";
 	font-size: 30px;
 	font-weight: 600;
-	margin: 30px 0;
+	margin: 40px 0 20px 0;
+`;
+
+const TitleDes = styled.div`
+	width: 50%;
+	text-align: center;
+	font-family: "Pretendard";
+	color: #f0f0f0;
+	margin-bottom: 40px;
+	word-break: keep-all;
 `;
 
 const BoxWrapper = styled.div`

@@ -59,14 +59,34 @@ export const GPT3 = {
 				console.log(error);
 				return error;
 			}),
+	getDirectory: (ask) =>
+		axios
+			.post(
+				apiUrl,
+				JSON.stringify({
+					messages: [
+						{
+							role: "user",
+							content: `지금부터 마크다운 문법으로 리드미를 작성할거야.
+		우선 h3(###)로 "디렉토리 구조"라고 쓴 다음, 어울리는 이모지를 하나 제목 왼쪽에 넣어줘.
+		그 다음 마크다운 문법의 코드 블럭 내부에 ${ask.url} 레포지토리의 폴더 디렉토리 구조를 설명해줘.
+		각 폴더에 대한 설명은 폴더 이름 바로 옆에 주석으로 달아서 써줘.
+		폴더 내부에 하위 폴더 또는 파일이 5개 이상이라면 생략해.
+		`,
+						},
+					],
+					model: "gpt-3.5-turbo",
+				}),
+				{
+					headers,
+				}
+			)
+			.then((response) => {
+				console.log(response);
+				return response;
+			})
+			.catch((error) => {
+				console.log(error);
+				return error;
+			}),
 };
-
-// export const AskGPT = async (ask) => {
-// 	try {
-// 		const response = await GPT3.askGPT(ask);
-// 		console.log(response);
-// 		return Promise.resolve(response);
-// 	} catch (error) {
-// 		return Promise.reject(error);
-// 	}
-// };

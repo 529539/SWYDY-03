@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import Result from "./Result";
+import { BsGithub } from "react-icons/bs";
 import { GPT3 } from "../api/OpenAI";
+import Loader from "react-spinners/PulseLoader";
 
 const Main = () => {
 	const [isResult, setIsResult] = useState(false);
@@ -47,6 +49,8 @@ const Main = () => {
 		[strings]
 	);
 	const [result, setResult] = useState("");
+	const [result2, setResult2] = useState("");
+	const [loading, setLoading] = useState(false);
 	const PrePost = () => {
 		console.log(strings);
 		if (
@@ -58,10 +62,18 @@ const Main = () => {
 		) {
 			alert("모든 필드를 전부 작성했는지 다시 확인해주세요!");
 		} else {
+			setLoading(true);
 			GPT3.askGPT(strings)
 				.then((res) => {
 					console.log(res);
 					setResult(res.data.choices[0].message.content);
+					setLoading(false);
+				})
+				.catch((err) => console.log(err));
+			GPT3.getDirectory(strings)
+				.then((res) => {
+					console.log(res);
+					setResult2(res.data.choices[0].message.content);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -77,7 +89,12 @@ const Main = () => {
 	}, [isResult]);
 	return (
 		<Container style={{ height: isResult ? "100%" : "100vh" }}>
-			<Title>🖨️ 리드미 생성기 🖨️</Title>
+			<Top href="https://github.com/529539/SWYDY-03.git" target="_blank">
+				<BsGithub fill="#ffffff" size="20" />
+			</Top>
+			<Title style={{ marginTop: isResult ? "40px" : "0px" }}>
+				🖨️ 리드미 생성기 🖨️
+			</Title>
 			<TitleDes>
 				GitHub에서 프로젝트를 소개하는 README를 ChatGPT가 대신 써드립니다!
 				소개하고 싶은 GitHub 링크를 첨부하고, 설명을 채워주세요.
@@ -113,9 +130,30 @@ const Main = () => {
 					PrePost();
 				}}
 			>
-				🔄 리드미 생성 🔄
+				{loading ? "✏️ GPT가 리드미를 생성중... ✏️" : "🔄 리드미 생성 🔄"}
 			</Button>
-			{isResult ? result ? <Result result={result} /> : null : null}
+			{isResult ? (
+				result ? (
+					result2 ? (
+						<Result result={result} result2={result2} />
+					) : null
+				) : null
+			) : null}
+			<div
+				style={{
+					position: "absolute",
+					bottom: "0px",
+					zIndex: "1000",
+				}}
+			>
+				<Loader
+					color="#ffffff"
+					speedMultiplier="0.7"
+					size="10"
+					margin="5"
+					loading={loading}
+				/>
+			</div>
 		</Container>
 	);
 };
@@ -130,6 +168,14 @@ const Container = styled.div`
 	justify-content: center;
 	align-items: center;
 	background: linear-gradient(180deg, #051e48 0%, #051027 100%);
+`;
+
+const Top = styled.a`
+	cursor: pointer;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	text-decoration: none;
 `;
 
 const Title = styled.div`
@@ -208,8 +254,9 @@ const TeamInput = styled.textarea`
 
 const Button = styled.div`
 	cursor: pointer;
-	width: 160px;
+	min-width: 160px;
 	height: 34px;
+	padding: 0 10px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
