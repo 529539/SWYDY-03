@@ -6,7 +6,6 @@ import { GPT3 } from "../api/OpenAI";
 import Loader from "react-spinners/PulseLoader";
 
 const Main = () => {
-	const [isResult, setIsResult] = useState(false);
 	useEffect(() => {
 		setIsResult(false);
 		setResult("");
@@ -48,11 +47,13 @@ const Main = () => {
 		},
 		[strings]
 	);
+	const [isResult, setIsResult] = useState(false);
+	const [isResult2, setIsResult2] = useState(false);
 	const [result, setResult] = useState("");
 	const [result2, setResult2] = useState("");
 	const [loading, setLoading] = useState(false);
 	const PrePost = () => {
-		console.log(strings);
+		//console.log(strings);
 		if (
 			strings.url === "" ||
 			strings.title === "" ||
@@ -65,34 +66,41 @@ const Main = () => {
 			setLoading(true);
 			GPT3.askGPT(strings)
 				.then((res) => {
-					console.log(res);
+					//console.log(res);
 					setResult(res.data.choices[0].message.content);
-					setLoading(false);
-				})
-				.catch((err) => console.log(err));
-			GPT3.getDirectory(strings)
-				.then((res) => {
-					console.log(res);
-					setResult2(res.data.choices[0].message.content);
+					GPT3.getDirectory(strings)
+						.then((res) => {
+							//console.log(res);
+							setResult2(res.data.choices[0].message.content);
+							setLoading(false);
+						})
+						.catch((err) => console.log(err));
 				})
 				.catch((err) => console.log(err));
 		}
 	};
 	useEffect(() => {
-		console.log("gpt 응답 : ", result);
+		//console.log("gpt 응답 : ", result);
 		if (result !== "" && result !== undefined) {
 			setIsResult(true);
 		} else setIsResult(false);
 	}, [result]);
 	useEffect(() => {
-		console.log(isResult);
-	}, [isResult]);
+		//console.log("gpt 응답 : ", result2);
+		if (result2 !== "" && result2 !== undefined) {
+			setIsResult2(true);
+		} else setIsResult2(false);
+	}, [result2]);
 	return (
-		<Container style={{ height: isResult ? "100%" : "100vh" }}>
+		<Container
+			style={{ height: isResult ? (isResult2 ? "100%" : "100vh") : "100vh" }}
+		>
 			<Top href="https://github.com/529539/SWYDY-03.git" target="_blank">
 				<BsGithub fill="#ffffff" size="20" />
 			</Top>
-			<Title style={{ marginTop: isResult ? "40px" : "0px" }}>
+			<Title
+				style={{ marginTop: isResult ? (isResult2 ? "40px" : "0px") : "0px" }}
+			>
 				🖨️ 리드미 생성기 🖨️
 			</Title>
 			<TitleDes>
